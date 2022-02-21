@@ -22,8 +22,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jefisu.contacts.R
 import com.jefisu.contacts.core.presentation.components.StandardButton
-import com.jefisu.contacts.core.presentation.components.StandardTextField
 import com.jefisu.contacts.core.presentation.ui.theme.LocalSpacing
+import com.jefisu.contacts.features_contacts.presentation.add_edit.components.AddEditTextField
 import kotlinx.coroutines.flow.collect
 
 @Composable
@@ -48,7 +48,11 @@ fun AddEditScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(space.medium),
+            .padding(
+                start = space.small,
+                end = space.medium,
+                top = space.large
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -63,22 +67,22 @@ fun AddEditScreen(
                 modifier = Modifier.size(70.dp)
             )
         }
-        Spacer(modifier = Modifier.height(space.medium))
-        StandardTextField(
+        Spacer(modifier = Modifier.height(space.large))
+        AddEditTextField(
             text = viewModel.state.name,
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredName(it)) },
             hint = "Name",
-            icon1 = Icons.Default.Person,
+            icon = Icons.Default.Person,
             onClickClearText = {
                 viewModel.onEvent(AddEditEvent.ClearTextName)
             }
         )
         Spacer(modifier = Modifier.height(space.medium))
-        StandardTextField(
+        AddEditTextField(
             text = viewModel.state.phone,
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredPhone(it)) },
             hint = "Phone",
-            icon1 = Icons.Default.Phone,
+            icon = Icons.Default.Phone,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Phone
             ),
@@ -87,11 +91,11 @@ fun AddEditScreen(
             }
         )
         Spacer(modifier = Modifier.height(space.medium))
-        StandardTextField(
+        AddEditTextField(
             text = viewModel.state.email,
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredEmail(it)) },
             hint = "Email",
-            icon1 = Icons.Default.Email,
+            icon = Icons.Default.Email,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email
             ),

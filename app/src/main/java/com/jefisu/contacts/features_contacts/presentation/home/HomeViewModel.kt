@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
     private var contactJob: Job? = null
 
     init {
-        getContacts(ContactOrder.Name(OrderType.Descending))
+        getContacts(ContactOrder.Name(OrderType.Ascending))
     }
 
     fun onEvent(event: HomeEvent) {
