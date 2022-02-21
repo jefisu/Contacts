@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jefisu.contacts.core.presentation.components.Navigation
 import com.jefisu.contacts.core.presentation.util.Screen
 import com.jefisu.contacts.core.presentation.components.StandardScaffold
+import com.jefisu.contacts.core.presentation.ui.theme.ContactsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,19 +21,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val scaffoldState = rememberScaffoldState()
+            ContactsTheme {
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val scaffoldState = rememberScaffoldState()
 
-            StandardScaffold(
-                modifier = Modifier.fillMaxSize(),
-                navController = navController,
-                state = scaffoldState,
-                showBottomBar = shouldShowBottomBar(navBackStackEntry),
-                content = {
-                    Navigation(navController, scaffoldState)
-                }
-            )
+                StandardScaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    navController = navController,
+                    state = scaffoldState,
+                    showBottomBar = shouldShowBottomBar(navBackStackEntry),
+                    content = {
+                        Navigation(navController, scaffoldState)
+                    }
+                )
+            }
         }
     }
 

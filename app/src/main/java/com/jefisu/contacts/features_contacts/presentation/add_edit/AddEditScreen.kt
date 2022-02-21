@@ -2,6 +2,7 @@ package com.jefisu.contacts.features_contacts.presentation.add_edit
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -57,7 +58,10 @@ fun AddEditScreen(
     ) {
         Box(
             modifier = Modifier
-                .background(color = Color.Black, shape = CircleShape)
+                .background(
+                    color = if (isSystemInDarkTheme()) Color.DarkGray else Color.Black,
+                    shape = CircleShape
+                )
                 .padding(space.extraSmall),
             contentAlignment = Alignment.Center
         ) {

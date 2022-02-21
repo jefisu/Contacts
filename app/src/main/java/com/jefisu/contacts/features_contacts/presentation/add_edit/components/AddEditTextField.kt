@@ -58,7 +58,7 @@ fun AddEditTextField(
                 }
             },
             colors = TextFieldDefaults.textFieldColors(
-                textColor = Color.Black,
+                textColor = MaterialTheme.colors.onBackground,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
             )
