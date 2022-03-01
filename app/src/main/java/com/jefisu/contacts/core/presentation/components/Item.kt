@@ -53,7 +53,7 @@ fun Item(
                         .defaultMinSize(24.dp)
                 ) {
                     Text(
-                        text = contact.name.take(1).capitalize(),
+                        text = contact.name.take(1).uppercase(),
                         fontSize = 28.sp,
                         color = Color.White
                     )

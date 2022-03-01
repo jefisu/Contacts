@@ -2,12 +2,10 @@ package com.jefisu.contacts.core.presentation.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.navigation.NavController
 
 @Composable
@@ -26,9 +24,7 @@ fun StandardScaffold(
             if (showBottomBar) {
                 StandardBottomBar(
                     navController = navController,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(CircleShape)
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }

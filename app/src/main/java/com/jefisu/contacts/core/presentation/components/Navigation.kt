@@ -1,5 +1,8 @@
 package com.jefisu.contacts.core.presentation.components
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -14,6 +17,9 @@ import com.jefisu.contacts.features_contacts.presentation.recents.RecentsScreen
 import com.jefisu.contacts.features_contacts.presentation.search.SearchScreen
 import com.jefisu.contacts.features_contacts.presentation.splash.SplashScreen
 
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
 @Composable
 fun Navigation(navController: NavHostController, scaffoldState: ScaffoldState) {
     NavHost(

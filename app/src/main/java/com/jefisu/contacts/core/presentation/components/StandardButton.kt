@@ -20,15 +20,16 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun StandardButton(
     text: String,
+    modifier: Modifier = Modifier,
     textSize: TextUnit = 24.sp,
     backgroundColor: Color = MaterialTheme.colors.surface,
     selected: Boolean = true,
     selectedColor: Color = LocalContentColor.current,
     unSelectedColor: Color = LocalContentColor.current.copy(ContentAlpha.disabled),
-    onClickAction: () -> Unit = {},
+    onClickAction: () -> Unit = {}
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(bottom = 4.dp)
             .background(backgroundColor)
             .clip(CircleShape)
