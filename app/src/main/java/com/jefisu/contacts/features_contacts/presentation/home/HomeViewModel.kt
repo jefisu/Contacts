@@ -42,9 +42,9 @@ class HomeViewModel @Inject constructor(
     private fun getContacts(contactOrder: ContactOrder) {
         contactJob?.cancel()
         contactJob = contactUseCase.getContacts(contactOrder)
-            .onEach {
+            .onEach { contacts ->
                 state = state.copy(
-                    contacts = it
+                    groupedContacts = contacts.groupBy { it.name.take(1) }
                 )
             }.launchIn(viewModelScope)
     }

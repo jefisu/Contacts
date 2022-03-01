@@ -50,9 +50,9 @@ class RecentsViewModel @Inject constructor(
     private fun getContacts(contactOrder: ContactOrder) {
         contactJob?.cancel()
         contactJob = contactUseCase.getContacts(contactOrder)
-            .onEach {
+            .onEach { contacts ->
                 state = state.copy(
-                    contacts = it,
+                    groupedContacts = contacts.groupBy { it.date },
                     contactOrder = contactOrder
                 )
             }.launchIn(viewModelScope)

@@ -1,8 +1,10 @@
 package com.jefisu.contacts.features_contacts.presentation.recents
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.Composable
@@ -14,7 +16,9 @@ import com.jefisu.contacts.core.presentation.components.StandardScreen
 import com.jefisu.contacts.core.presentation.util.Screen
 import com.jefisu.contacts.features_contacts.presentation.recents.components.OrderSection
 
-@OptIn(ExperimentalAnimationApi::class)
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@ExperimentalFoundationApi
 @Composable
 fun RecentsScreen(
     navController: NavController,
@@ -23,7 +27,7 @@ fun RecentsScreen(
     StandardScreen(
         title = "Recents",
         icon = Icons.Default.Sort,
-        contacts = viewModel.state.contacts,
+        groupedContacts = viewModel.state.groupedContacts,
         onClick = {
             viewModel.onEvent(RecentsEvent.ToggleOrderSection)
         },
@@ -42,7 +46,7 @@ fun RecentsScreen(
                 OrderSection(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                        .padding(horizontal = 18.dp, vertical = 4.dp),
                     contactOrder = viewModel.state.contactOrder,
                     onOrderChange = {
                         viewModel.onEvent(RecentsEvent.Order(it))
