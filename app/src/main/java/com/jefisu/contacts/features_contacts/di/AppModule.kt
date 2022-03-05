@@ -3,6 +3,8 @@ package com.jefisu.contacts.features_contacts.di
 import android.app.Application
 import androidx.room.Room
 import com.jefisu.contacts.features_contacts.data.ContactDatabase
+import com.jefisu.contacts.features_contacts.data.ContactRepositoryImpl
+import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
 import com.jefisu.contacts.features_contacts.domain.use_case.*
 import dagger.Module
 import dagger.Provides
@@ -26,13 +28,19 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideContactUseCase(db: ContactDatabase): ContactsUseCase {
+    fun provideContactRepository(db: ContactDatabase): ContactRepository {
+        return ContactRepositoryImpl(db.dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideContactUseCase(repository: ContactRepository): ContactsUseCase {
         return ContactsUseCase(
-            getContacts = GetContacts(db.dao),
-            getContact = GetContact(db.dao),
-            getContactsByName = GetContactsByName(db.dao),
-            insertContact = InsertContact(db.dao),
-            deleteContact = DeleteContact(db.dao)
+            getContacts = GetContacts(repository),
+            getContact = GetContact(repository),
+            getContactsByName = GetContactsByName(repository),
+            insertContact = InsertContact(repository),
+            deleteContact = DeleteContact(repository)
         )
     }
 }

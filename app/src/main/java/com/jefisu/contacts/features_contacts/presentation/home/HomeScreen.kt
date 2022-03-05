@@ -3,9 +3,11 @@ package com.jefisu.contacts.features_contacts.presentation.home
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.jefisu.contacts.R
 import com.jefisu.contacts.core.presentation.components.StandardScreen
 import com.jefisu.contacts.core.presentation.util.Screen
@@ -20,6 +22,7 @@ fun HomeScreen(
     StandardScreen(
         title = stringResource(R.string.app_name),
         groupedContacts = viewModel.state.groupedContacts,
+        isEnabledSwiped = true,
         onClick = {
             navController.navigate(Screen.AddEdit.route)
         },

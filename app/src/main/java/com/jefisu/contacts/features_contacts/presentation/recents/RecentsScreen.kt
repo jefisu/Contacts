@@ -28,6 +28,7 @@ fun RecentsScreen(
         title = "Recents",
         icon = Icons.Default.Sort,
         groupedContacts = viewModel.state.groupedContacts,
+        isEnabledSwiped = false,
         onClick = {
             viewModel.onEvent(RecentsEvent.ToggleOrderSection)
         },

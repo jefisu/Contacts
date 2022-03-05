@@ -22,6 +22,7 @@ import com.jefisu.contacts.features_contacts.domain.model.Contact
 @Composable
 fun StandardScreen(
     title: String,
+    isEnabledSwiped: Boolean,
     icon: ImageVector = Icons.Default.Add,
     onClick: () -> Unit = {},
     onNavigate: (String) -> Unit = {},
@@ -52,7 +53,7 @@ fun StandardScreen(
                         .clickable {
                             onNavigate(it.id.toString())
                         },
-                    activeSwipedDelete = true,
+                    activeSwipedDelete = isEnabledSwiped,
                     onSwipedDelete = {
                         onSwipedDelete(it)
                     }

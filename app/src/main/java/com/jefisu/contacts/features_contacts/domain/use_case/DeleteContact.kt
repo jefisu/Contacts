@@ -1,12 +1,12 @@
 package com.jefisu.contacts.features_contacts.domain.use_case
 
-import com.jefisu.contacts.features_contacts.data.ContactDao
 import com.jefisu.contacts.features_contacts.domain.model.Contact
+import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
 
 class DeleteContact(
-    private val dao: ContactDao
+    private val repository: ContactRepository
 ) {
     suspend operator fun invoke(contact: Contact) {
-        dao.deleteContact(contact)
+        repository.deleteContact(contact)
     }
 }

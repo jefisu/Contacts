@@ -1,6 +1,5 @@
 package com.jefisu.contacts.features_contacts.presentation.add_edit
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -33,8 +32,7 @@ class AddEditViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        val contactId = savedStateHandle.get<String>("id")
-        contactId?.let { id ->
+        savedStateHandle.get<String>("id")?.let { id ->
             viewModelScope.launch {
                 _currentContact = contactUseCase.getContact(id.toInt())
                 _currentContact?.let {
@@ -58,8 +56,7 @@ class AddEditViewModel @Inject constructor(
                                 name = state.name,
                                 phone = state.phone,
                                 email = state.email,
-                                date = _currentContact?.date ?: System.currentTimeMillis()
-                                    .toFormat("MM/dd/yyyy"),
+                                date = _currentContact?.date ?: toFormat("MM/dd/yyyy"),
                                 id = _currentContact?.id
                             )
                         )
@@ -82,10 +79,9 @@ class AddEditViewModel @Inject constructor(
         data class ShowSnackBar(val message: String) : UiEvent()
         object AddSuccessfully : UiEvent()
     }
-}
 
-@SuppressLint("SimpleDateFormat")
-private fun Long.toFormat(pattern: String, locale: Locale = Locale.US): String {
-    val usePattern = SimpleDateFormat(pattern, locale)
-    return usePattern.format(System.currentTimeMillis())
+    private fun toFormat(pattern: String): String {
+        val usePattern = SimpleDateFormat(pattern, Locale.getDefault())
+        return usePattern.format(System.currentTimeMillis())
+    }
 }
