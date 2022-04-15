@@ -45,11 +45,6 @@ class HomeViewModel @Inject constructor(
                 }
                 getContacts(event.contactOrder)
             }
-            is HomeEvent.ToggleOrderSection -> {
-                state = state.copy(
-                    isOrderSectionVisible = !state.isOrderSectionVisible
-                )
-            }
             is HomeEvent.ClearResearchText -> {
                 state = state.copy(query = event.text)
                 getContacts()
@@ -73,7 +68,7 @@ class HomeViewModel @Inject constructor(
         contactUseCase.getContacts(contactOrder)
             .onEach { contacts ->
                 state = state.copy(
-                    contacts = contacts,
+                    contacts = contacts.groupBy { it.name.first().uppercase() },
                     contactOrder = contactOrder
                 )
             }.launchIn(viewModelScope)
@@ -90,7 +85,7 @@ class HomeViewModel @Inject constructor(
                         it.name.lowercase().contains(query.lowercase())
                     }
                     state = state.copy(
-                        contacts = filteredContacts
+                        contacts = filteredContacts.groupBy { it.name.first().uppercase() }
                     )
                 }
                 .launchIn(this)

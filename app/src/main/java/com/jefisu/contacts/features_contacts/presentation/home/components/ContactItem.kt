@@ -1,11 +1,12 @@
 package com.jefisu.contacts.features_contacts.presentation.home.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,9 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.jefisu.contacts.core.presentation.components.IconButtonAnimation
-import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.features_contacts.domain.model.Contact
 
 
@@ -23,6 +22,7 @@ import com.jefisu.contacts.features_contacts.domain.model.Contact
 @Composable
 fun ContactItem(
     contact: Contact,
+    initialLetter: String,
     modifier: Modifier = Modifier,
     onSwipedDelete: () -> Unit = {},
     onFavoriteClick: () -> Unit = {}
@@ -35,14 +35,7 @@ fun ContactItem(
     SwipeToDismiss(
         state = dismissState,
         directions = setOf(DismissDirection.StartToEnd),
-        background = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color.Red)
-            )
-        }
+        background = {}
     ) {
         Box(
             modifier = modifier,
@@ -50,31 +43,35 @@ fun ContactItem(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .background(color = Color.DarkGray, shape = CircleShape)
-                        .padding(MaterialTheme.spacing.small)
-                        .defaultMinSize(24.dp)
+                        .size(45.dp)
+                        .clip(CircleShape)
+                        .background(if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray)
                 ) {
                     Text(
-                        text = contact.name.take(1).uppercase(),
-                        fontSize = 28.sp,
-                        color = Color.White
+                        text = when  {
+                            initialLetter in (0..9).toList().toString() -> "#"
+                            else -> initialLetter
+                        },
+                        style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.onSurface
                     )
                 }
-                Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = contact.name,
-                    style = MaterialTheme.typography.h5
+                    style = MaterialTheme.typography.h6
                 )
             }
             IconButtonAnimation(
                 selected = contact.isFavorite,
-                icon = Icons.Default.FavoriteBorder,
-                onClick = onFavoriteClick
+                icon = if (contact.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                onClick = onFavoriteClick,
+                color = if (contact.isFavorite) Color.Red else MaterialTheme.colors.onSurface
             )
         }
     }
