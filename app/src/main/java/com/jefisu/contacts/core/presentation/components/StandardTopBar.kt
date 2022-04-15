@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,14 +22,15 @@ fun StandardTopBar(
     title: String,
     icon: ImageVector,
     onClick: () -> Unit = {},
-    onNavigateSearch: () -> Unit = {}
+    onNavigateSearch: () -> Unit = {},
+    onSortClick: () -> Unit = {}
 ) {
     Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, top = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 16.dp, top = 4.dp)
     ) {
         Text(text = title, style = MaterialTheme.typography.h4)
         Row {
@@ -42,6 +44,12 @@ fun StandardTopBar(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search contact"
+                )
+            }
+            IconButton(onClick = onSortClick) {
+                Icon(
+                    imageVector = Icons.Default.SortByAlpha,
+                    contentDescription = "Sort contact"
                 )
             }
         }

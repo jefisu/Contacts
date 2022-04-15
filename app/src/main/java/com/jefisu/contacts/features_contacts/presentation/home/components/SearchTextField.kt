@@ -1,4 +1,4 @@
-package com.jefisu.contacts.features_contacts.presentation.search.components
+package com.jefisu.contacts.features_contacts.presentation.home.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SearchTextField(
+    modifier: Modifier= Modifier,
     text: String,
     onTextChange: (String) -> Unit,
     leadingIcon: ImageVector = Icons.Default.ArrowBack,
@@ -23,7 +24,7 @@ fun SearchTextField(
     onClickClearText: () -> Unit = {},
     onClickBack: () -> Unit = {},
 ) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(modifier = modifier) {
         TextField(
             value = text,
             onValueChange = onTextChange,

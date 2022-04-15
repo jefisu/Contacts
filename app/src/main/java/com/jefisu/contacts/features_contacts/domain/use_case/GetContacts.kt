@@ -1,5 +1,6 @@
 package com.jefisu.contacts.features_contacts.domain.use_case
 
+import com.jefisu.contacts.features_contacts.data.toContact
 import com.jefisu.contacts.features_contacts.domain.model.Contact
 import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
 import com.jefisu.contacts.features_contacts.domain.util.ContactOrder
@@ -15,18 +16,12 @@ class GetContacts(
     ): Flow<List<Contact>> {
         return repository.getContacts().map { contacts ->
             when (contactOrder.orderType) {
-                is OrderType.Ascending -> {
-                    when (contactOrder) {
-                        is ContactOrder.Name -> contacts.sortedBy { it.name }
-                        is ContactOrder.Date -> contacts.sortedBy { it.date }
-                    }
-                }
-                is OrderType.Descending -> {
-                    when(contactOrder) {
-                        is ContactOrder.Name -> contacts.sortedByDescending { it.name }
-                        is ContactOrder.Date -> contacts.sortedByDescending { it.date }
-                    }
-                }
+                is OrderType.Ascending -> contacts
+                    .map { it.toContact() }
+                    .sortedBy { it.name }
+                is OrderType.Descending -> contacts
+                    .map { it.toContact() }
+                    .sortedByDescending { it.name }
             }
         }
     }

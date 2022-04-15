@@ -6,6 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -23,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jefisu.contacts.R
 import com.jefisu.contacts.core.presentation.components.StandardButton
-import com.jefisu.contacts.core.presentation.ui.theme.LocalSpacing
+import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.features_contacts.presentation.add_edit.components.AddEditTextField
 import kotlinx.coroutines.flow.collect
 
@@ -33,7 +34,7 @@ fun AddEditScreen(
     scaffoldState: ScaffoldState,
     viewModel: AddEditViewModel = hiltViewModel()
 ) {
-    val space = LocalSpacing.current
+    val space = MaterialTheme.spacing
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collect { event ->
             when (event) {

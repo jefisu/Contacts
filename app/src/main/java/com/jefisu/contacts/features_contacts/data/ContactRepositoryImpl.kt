@@ -3,24 +3,29 @@ package com.jefisu.contacts.features_contacts.data
 import com.jefisu.contacts.features_contacts.domain.model.Contact
 import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ContactRepositoryImpl(
-    private val contactDao: ContactDao
+@Singleton
+class ContactRepositoryImpl @Inject constructor(
+    db: ContactDatabase
 ) : ContactRepository {
 
-    override fun getContacts(): Flow<List<Contact>> {
+    private val contactDao = db.dao
+
+    override fun getContacts(): Flow<List<ContactEntity>> {
         return contactDao.getContacts()
     }
 
     override suspend fun getContact(id: Int): Contact? {
-        return contactDao.getContact(id)
+        return contactDao.getContact(id)?.toContact()
     }
 
     override suspend fun insertContact(contact: Contact) {
-        contactDao.insertContact(contact)
+        contactDao.insertContact(contact.toContactEntity())
     }
 
     override suspend fun deleteContact(contact: Contact) {
-        contactDao.deleteContact(contact)
+        contactDao.deleteContact(contact.toContactEntity())
     }
 }

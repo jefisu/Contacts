@@ -10,6 +10,7 @@ import com.jefisu.contacts.features_contacts.domain.util.ContactOrder
 import com.jefisu.contacts.features_contacts.domain.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -26,7 +27,7 @@ class HomeViewModel @Inject constructor(
     private var contactJob: Job? = null
 
     init {
-        getContacts(ContactOrder.Name(OrderType.Ascending))
+        getContacts()
     }
 
     fun onEvent(event: HomeEvent) {
@@ -36,16 +37,63 @@ class HomeViewModel @Inject constructor(
                     contactUseCase.deleteContact(event.contact)
                 }
             }
+            is HomeEvent.Order -> {
+                if (state.contactOrder::class == event.contactOrder::class &&
+                    state.contactOrder.orderType == event.contactOrder.orderType
+                ) {
+                    return
+                }
+                getContacts(event.contactOrder)
+            }
+            is HomeEvent.ToggleOrderSection -> {
+                state = state.copy(
+                    isOrderSectionVisible = !state.isOrderSectionVisible
+                )
+            }
+            is HomeEvent.ClearResearchText -> {
+                state = state.copy(query = event.text)
+                getContacts()
+            }
+            is HomeEvent.OnFilterContacts -> {
+                onFilterContacts(event.query)
+            }
+            is HomeEvent.AddRemoveFavorite -> {
+                viewModelScope.launch {
+                    contactUseCase.insertContact(
+                        event.contact.copy(isFavorite = event.selected)
+                    )
+                }
+            }
         }
     }
 
-    private fun getContacts(contactOrder: ContactOrder) {
-        contactJob?.cancel()
-        contactJob = contactUseCase.getContacts(contactOrder)
+    private fun getContacts(
+        contactOrder: ContactOrder = ContactOrder.Name(OrderType.Ascending)
+    ) {
+        contactUseCase.getContacts(contactOrder)
             .onEach { contacts ->
                 state = state.copy(
-                    groupedContacts = contacts.groupBy { it.name.take(1) }
+                    contacts = contacts,
+                    contactOrder = contactOrder
                 )
             }.launchIn(viewModelScope)
+    }
+
+    private fun onFilterContacts(query: String) {
+        state = state.copy(query = query)
+        contactJob?.cancel()
+        contactJob = viewModelScope.launch {
+            delay(300)
+            contactUseCase.getContactsByName()
+                .onEach { contacts ->
+                    val filteredContacts = contacts.filter {
+                        it.name.lowercase().contains(query.lowercase())
+                    }
+                    state = state.copy(
+                        contacts = filteredContacts
+                    )
+                }
+                .launchIn(this)
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.jefisu.contacts.features_contacts.presentation.recents.components
+package com.jefisu.contacts.features_contacts.presentation.home.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +27,7 @@ fun DefaultRadioButton(
             selected = selected,
             onClick = onSelect,
             colors = RadioButtonDefaults.colors(
-                selectedColor = MaterialTheme.colors.primary,
+                selectedColor = MaterialTheme.colors.onSurface,
                 unselectedColor = MaterialTheme.colors.onBackground
             )
         )

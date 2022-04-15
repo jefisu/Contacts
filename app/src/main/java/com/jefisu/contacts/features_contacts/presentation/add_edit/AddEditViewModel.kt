@@ -13,8 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,7 +54,6 @@ class AddEditViewModel @Inject constructor(
                                 name = state.name,
                                 phone = state.phone,
                                 email = state.email,
-                                date = _currentContact?.date ?: toFormat("MM/dd/yyyy"),
                                 id = _currentContact?.id
                             )
                         )
@@ -78,10 +75,5 @@ class AddEditViewModel @Inject constructor(
     sealed class UiEvent {
         data class ShowSnackBar(val message: String) : UiEvent()
         object AddSuccessfully : UiEvent()
-    }
-
-    private fun toFormat(pattern: String): String {
-        val usePattern = SimpleDateFormat(pattern, Locale.getDefault())
-        return usePattern.format(System.currentTimeMillis())
     }
 }

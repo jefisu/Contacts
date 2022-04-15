@@ -5,12 +5,18 @@ import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun EnterAnimation(content: @Composable () -> Unit) {
+fun EnterAnimation(
+    isVisible: Boolean = true,
+    enterAnimation: EnterTransition = fadeIn() + expandVertically(),
+    exitTransition: ExitTransition = fadeOut() + shrinkVertically(),
+    content: @Composable () -> Unit
+) {
     AnimatedVisibility(
-        visible = true,
-        enter = slideInVertically() + expandVertically() + fadeIn(),
-        exit = slideOutVertically() + shrinkVertically() + fadeOut(),
-        content = content,
+        visible = isVisible,
+        enter = enterAnimation,
+        exit = exitTransition,
         initiallyVisible = false
-    )
+    ) {
+        content()
+    }
 }
