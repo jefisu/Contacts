@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jefisu.contacts.R
+import com.jefisu.contacts.core.presentation.components.DividerAtEndToList
 import com.jefisu.contacts.core.presentation.ui.theme.BlueAlternative
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.core.presentation.util.Screen
@@ -106,8 +107,14 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 }
                 item {
-                    Divider(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.extraSmall))
-                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                    DividerAtEndToList(
+                        letter = letter,
+                        items = (1..9).toList(),
+                        content = {
+                            Divider(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.extraSmall))
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                        }
+                    )
                 }
             }
         }
