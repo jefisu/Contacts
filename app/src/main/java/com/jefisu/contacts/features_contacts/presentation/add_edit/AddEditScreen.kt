@@ -26,7 +26,7 @@ import com.jefisu.contacts.R
 import com.jefisu.contacts.core.presentation.components.StandardButton
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.features_contacts.presentation.add_edit.components.AddEditTextField
-import kotlinx.coroutines.flow.collect
+import com.jefisu.contacts.features_contacts.presentation.add_edit.util.phoneVisualTransformation
 
 @Composable
 fun AddEditScreen(
@@ -85,7 +85,11 @@ fun AddEditScreen(
         Spacer(modifier = Modifier.height(space.medium))
         AddEditTextField(
             text = viewModel.state.phone,
-            onTextChange = { viewModel.onEvent(AddEditEvent.EnteredPhone(it)) },
+            onTextChange = {
+                if (it.length <= 17) {
+                    viewModel.onEvent(AddEditEvent.EnteredPhone(it))
+                }
+            },
             hint = "Phone",
             icon = Icons.Default.Phone,
             keyboardOptions = KeyboardOptions(
@@ -93,7 +97,8 @@ fun AddEditScreen(
             ),
             onClickClearText = {
                 viewModel.onEvent(AddEditEvent.ClearTextPhone)
-            }
+            },
+            visualTransformation = { phoneVisualTransformation(it) }
         )
         Spacer(modifier = Modifier.height(space.medium))
         AddEditTextField(

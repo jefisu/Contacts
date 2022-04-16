@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -21,6 +22,7 @@ fun AddEditTextField(
     trailingIcon: ImageVector = Icons.Default.Clear,
     trailingIconDescription: String = "Clear text",
     hint: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     onClick: () -> Unit = {},
     onClickClearText: () -> Unit = {},
     keyboardOptions: KeyboardOptions = KeyboardOptions()
@@ -47,6 +49,7 @@ fun AddEditTextField(
             shape = RoundedCornerShape(10.dp),
             textStyle = MaterialTheme.typography.h5,
             modifier = Modifier.fillMaxWidth(),
+            visualTransformation = visualTransformation,
             trailingIcon = {
                 if (text.isNotBlank()) {
                     IconButton(onClick = onClickClearText) {
@@ -61,7 +64,7 @@ fun AddEditTextField(
                 textColor = MaterialTheme.colors.onBackground,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-            )
+            ),
         )
     }
 }
