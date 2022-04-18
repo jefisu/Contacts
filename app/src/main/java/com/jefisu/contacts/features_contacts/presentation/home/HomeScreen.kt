@@ -84,6 +84,12 @@ fun HomeScreen(
         }
         LazyColumn {
             state.contacts.forEach { (letter, contacts) ->
+                if (letter == "a".uppercase()) {
+                    item {
+                        Divider(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.extraSmall))
+                        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                    }
+                }
                 items(contacts) {
                     ContactItem(
                         contact = it,
@@ -107,14 +113,7 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 }
                 item {
-                    DividerAtEndToList(
-                        letter = letter,
-                        items = (1..9).toList(),
-                        content = {
-                            Divider(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.extraSmall))
-                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                        }
-                    )
+                    DividerAtEndToList(letter = letter)
                 }
             }
         }

@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import com.jefisu.contacts.R
 import com.jefisu.contacts.core.presentation.components.StandardButton
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
+import com.jefisu.contacts.core.presentation.util.Constants
 import com.jefisu.contacts.features_contacts.presentation.add_edit.components.AddEditTextField
 import com.jefisu.contacts.features_contacts.presentation.add_edit.util.phoneVisualTransformation
 
@@ -78,26 +79,16 @@ fun AddEditScreen(
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredName(it)) },
             hint = "Name",
             icon = Icons.Default.Person,
-            onClickClearText = {
-                viewModel.onEvent(AddEditEvent.ClearTextName)
-            }
+            onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextName) }
         )
         Spacer(modifier = Modifier.height(space.medium))
         AddEditTextField(
             text = viewModel.state.phone,
-            onTextChange = {
-                if (it.length <= 17) {
-                    viewModel.onEvent(AddEditEvent.EnteredPhone(it))
-                }
-            },
+            onTextChange = { viewModel.onEvent(AddEditEvent.EnteredPhone(it)) },
             hint = "Phone",
             icon = Icons.Default.Phone,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Phone
-            ),
-            onClickClearText = {
-                viewModel.onEvent(AddEditEvent.ClearTextPhone)
-            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextPhone) },
             visualTransformation = { phoneVisualTransformation(it) }
         )
         Spacer(modifier = Modifier.height(space.medium))
@@ -106,12 +97,8 @@ fun AddEditScreen(
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredEmail(it)) },
             hint = "Email",
             icon = Icons.Default.Email,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email
-            ),
-            onClickClearText = {
-                viewModel.onEvent(AddEditEvent.ClearTextEmail)
-            }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextEmail) }
         )
         Row(
             modifier = Modifier.weight(0.1f),

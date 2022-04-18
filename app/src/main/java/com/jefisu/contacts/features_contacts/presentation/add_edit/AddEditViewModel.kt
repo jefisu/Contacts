@@ -6,6 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jefisu.contacts.core.presentation.util.Constants.MAX_EMAIL_CHAR
+import com.jefisu.contacts.core.presentation.util.Constants.MAX_NAME_CHAR
+import com.jefisu.contacts.core.presentation.util.Constants.MAX_NUMBER_CHAR
 import com.jefisu.contacts.features_contacts.domain.model.Contact
 import com.jefisu.contacts.features_contacts.domain.model.InvalidContactException
 import com.jefisu.contacts.features_contacts.domain.use_case.ContactsUseCase
@@ -63,9 +66,21 @@ class AddEditViewModel @Inject constructor(
                     }
                 }
             }
-            is AddEditEvent.EnteredName -> state = state.copy(name = event.name)
-            is AddEditEvent.EnteredPhone -> state = state.copy(phone = event.phone)
-            is AddEditEvent.EnteredEmail -> state = state.copy(email = event.email)
+            is AddEditEvent.EnteredName -> {
+                if (event.name.length <= MAX_NAME_CHAR) {
+                    state = state.copy(name = event.name)
+                }
+            }
+            is AddEditEvent.EnteredPhone -> {
+                if (event.phone.length <= MAX_NUMBER_CHAR) {
+                    state = state.copy(phone = event.phone)
+                }
+            }
+            is AddEditEvent.EnteredEmail -> {
+                if (event.email.length <= MAX_EMAIL_CHAR) {
+                    state = state.copy(email = event.email)
+                }
+            }
             is AddEditEvent.ClearTextName -> state = state.copy(name = "")
             is AddEditEvent.ClearTextPhone -> state = state.copy(phone = "")
             is AddEditEvent.ClearTextEmail -> state = state.copy(email = "")
