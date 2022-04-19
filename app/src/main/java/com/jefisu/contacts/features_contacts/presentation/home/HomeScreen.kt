@@ -1,12 +1,8 @@
 package com.jefisu.contacts.features_contacts.presentation.home
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jefisu.contacts.R
-import com.jefisu.contacts.core.presentation.components.DividerAtEndToList
 import com.jefisu.contacts.core.presentation.ui.theme.BlueAlternative
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.core.presentation.util.Screen
@@ -37,6 +32,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
+    val scrollState = rememberScrollState()
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
@@ -45,7 +41,7 @@ fun HomeScreen(
                 start = MaterialTheme.spacing.medium,
                 top = MaterialTheme.spacing.medium,
                 end = MaterialTheme.spacing.medium,
-                bottom = MaterialTheme.spacing.extraSmall
+                bottom = MaterialTheme.spacing.small
             )
     ) {
         Text(text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.h5)
@@ -82,38 +78,44 @@ fun HomeScreen(
                 )
             }
         }
-        LazyColumn {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(scrollState)
+        ) {
             state.contacts.forEach { (letter, contacts) ->
-                if (letter == "a".uppercase()) {
-                    item {
-                        Divider(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.extraSmall))
-                        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                    }
-                }
-                items(contacts) {
-                    ContactItem(
-                        contact = it,
-                        initialLetter = letter,
-                        onSwipedDelete = { viewModel.onEvent(HomeEvent.DeleteContact(it)) },
-                        onFavoriteClick = {
-                            viewModel.onEvent(
-                                HomeEvent.AddRemoveFavorite(
-                                    selected = !it.isFavorite,
-                                    contact = it
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colors.onSurface.copy(0.05f))
+                        .padding(MaterialTheme.spacing.small)
+                ) {
+                    contacts.forEach { contact ->
+                        ContactItem(
+                            contact = contact,
+                            initialLetter = letter,
+                            onSwipedDelete = { viewModel.onEvent(HomeEvent.DeleteContact(contact)) },
+                            onFavoriteClick = {
+                                viewModel.onEvent(
+                                    HomeEvent.AddRemoveFavorite(
+                                        selected = !contact.isFavorite,
+                                        contact = contact
+                                    )
                                 )
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                            .clickable {
-                                navController.navigate(Screen.AddEdit.navArg(it.id))
-                            }
-                    )
-                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-                }
-                item {
-                    DividerAtEndToList(letter = letter)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable(
+                                    onClick = { navController.navigate(Screen.AddEdit.navArg(contact.id)) }
+                                )
+                        )
+                        if (contact != contacts.last()) {
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                        }
+                    }
                 }
             }
         }
