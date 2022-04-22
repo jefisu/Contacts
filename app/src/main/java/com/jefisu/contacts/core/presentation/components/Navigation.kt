@@ -14,7 +14,6 @@ import com.jefisu.contacts.core.presentation.util.Screen
 import com.jefisu.contacts.features_contacts.presentation.add_edit.AddEditScreen
 import com.jefisu.contacts.features_contacts.presentation.home.HomeScreen
 import com.jefisu.contacts.features_contacts.presentation.search.SearchScreen
-import com.jefisu.contacts.features_contacts.presentation.splash.SplashScreen
 
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
@@ -23,11 +22,8 @@ import com.jefisu.contacts.features_contacts.presentation.splash.SplashScreen
 fun Navigation(navController: NavHostController, scaffoldState: ScaffoldState) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Splash.route
+        startDestination = Screen.Home.route
     ) {
-        composable(Screen.Splash.route) {
-            SplashScreen(navController)
-        }
         composable(Screen.Home.route) {
             HomeScreen(navController)
         }
