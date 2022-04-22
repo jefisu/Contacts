@@ -23,14 +23,14 @@ fun phoneVisualTransformation(value: AnnotatedString): TransformedText {
 
     val phoneNumberOffsetTranslator = object : OffsetMapping {
         override fun originalToTransformed(offset: Int): Int {
-            when {
-                offset == 0 -> return offset
-                offset <= 2 -> return offset + 1
-                offset <= 4 -> return offset + 2
-                offset <= 9 -> return offset + 3
-                offset <= 13 -> return offset + 4
+            return when {
+                offset == 0 -> offset
+                offset <= 2 -> offset + 1
+                offset <= 4 -> offset + 2
+                offset <= 9 -> offset + 3
+                offset <= 13 -> offset + 4
+                else -> 17
             }
-            return 17
         }
 
         override fun transformedToOriginal(offset: Int): Int {

@@ -50,7 +50,7 @@ fun AddEditScreen(
     }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(
                 start = space.small,
                 end = space.medium,

@@ -1,9 +1,11 @@
 package com.jefisu.contacts.features_contacts.presentation.home.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -17,20 +19,20 @@ import androidx.compose.ui.unit.dp
 import com.jefisu.contacts.core.presentation.components.IconButtonAnimation
 import com.jefisu.contacts.features_contacts.domain.model.Contact
 
-
 @ExperimentalMaterialApi
 @Composable
 fun ContactItem(
     contact: Contact,
     initialLetter: String,
     modifier: Modifier = Modifier,
-    onSwipedDelete: () -> Unit = {},
-    onFavoriteClick: () -> Unit = {}
+    onNavigateClick: (Int?) -> Unit = {},
+    onSwipedDelete: (Contact) -> Unit = {},
+    onFavoriteClick: (selected: Boolean) -> Unit = {}
 ) {
     val dismissState = rememberDismissState()
 
     if (dismissState.isDismissed(DismissDirection.StartToEnd)) {
-        onSwipedDelete()
+        onSwipedDelete(contact)
     }
     SwipeToDismiss(
         state = dismissState,
@@ -38,7 +40,9 @@ fun ContactItem(
         background = {}
     ) {
         Box(
-            modifier = modifier,
+            modifier = modifier
+                .clip(RoundedCornerShape(10.dp))
+                .clickable { onNavigateClick(contact.id) },
             contentAlignment = Alignment.CenterEnd
         ) {
             Row(
@@ -54,9 +58,9 @@ fun ContactItem(
                         .background(if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray)
                 ) {
                     Text(
-                        text = when  {
+                        text = when {
                             initialLetter in (0..9).toList().toString() -> "#"
-                            else -> initialLetter
+                            else -> initialLetter.uppercase()
                         },
                         style = MaterialTheme.typography.h5,
                         color = MaterialTheme.colors.onSurface
@@ -70,8 +74,10 @@ fun ContactItem(
             IconButtonAnimation(
                 selected = contact.isFavorite,
                 icon = if (contact.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                onClick = onFavoriteClick,
-                color = if (contact.isFavorite) Color.Red else MaterialTheme.colors.onSurface
+                color = if (contact.isFavorite) Color.Red else MaterialTheme.colors.onSurface,
+                onClick = {
+                    onFavoriteClick(!contact.isFavorite)
+                }
             )
         }
     }

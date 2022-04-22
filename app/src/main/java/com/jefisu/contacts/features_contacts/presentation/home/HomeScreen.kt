@@ -1,12 +1,15 @@
 package com.jefisu.contacts.features_contacts.presentation.home
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SortByAlpha
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,12 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jefisu.contacts.R
-import com.jefisu.contacts.core.presentation.ui.theme.BlueAlternative
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.core.presentation.util.Screen
-import com.jefisu.contacts.features_contacts.domain.util.OrderType
 import com.jefisu.contacts.features_contacts.presentation.home.components.ContactItem
-import com.jefisu.contacts.features_contacts.presentation.home.components.SearchTextField
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @OptIn(ExperimentalAnimationApi::class)
 @ExperimentalMaterialApi
@@ -33,55 +36,53 @@ fun HomeScreen(
 ) {
     val state = viewModel.state
     val scrollState = rememberScrollState()
-    Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                start = MaterialTheme.spacing.medium,
-                top = MaterialTheme.spacing.medium,
-                end = MaterialTheme.spacing.medium,
-                bottom = MaterialTheme.spacing.small
-            )
-    ) {
-        Text(text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.h5)
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            SearchTextField(
-                text = state.query,
-                onTextChange = { viewModel.onEvent(HomeEvent.OnFilterContacts(it)) },
-                hint = "Search",
-                onClickClearText = { viewModel.onEvent(HomeEvent.ClearResearchText()) },
+    val collapsingState = rememberCollapsingToolbarScaffoldState()
+    CollapsingToolbarScaffold(
+        modifier = Modifier.fillMaxSize(),
+        state = collapsingState,
+        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+        toolbarModifier = Modifier.padding(8.dp),
+        toolbar = {
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.9f)
+                    .height(200.dp)
+                    .pin()
             )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.road(
+                    whenCollapsed = Alignment.TopStart,
+                    whenExpanded = Alignment.Center
+                )
+            ) {
+                Text(
+                    text = stringResource(id = R.string.app_name),
+                    style = MaterialTheme.typography.h4
+                )
+                if (collapsingState.toolbarState.progress == 1f) {
+                    Text(text = "${state.listSize} contacts in device")
+                }
+            }
             IconButton(
-                onClick = {
-                    if (state.contactOrder.orderType != OrderType.Ascending) {
-                        viewModel.onEvent(HomeEvent.Order(state.contactOrder.copy(OrderType.Ascending)))
-                    } else {
-                        viewModel.onEvent(HomeEvent.Order(state.contactOrder.copy(OrderType.Descending)))
-                    }
-                },
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(BlueAlternative)
+                onClick = { navController.navigate(Screen.Search.route) },
+                modifier = Modifier.road(
+                    whenCollapsed = Alignment.TopEnd,
+                    whenExpanded = Alignment.BottomEnd
+                )
             ) {
                 Icon(
-                    imageVector = Icons.Default.SortByAlpha,
-                    contentDescription = "Sort contacts",
-                    tint = MaterialTheme.colors.onSurface
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search contact"
                 )
             }
         }
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 8.dp)
                 .verticalScroll(scrollState)
         ) {
             state.contacts.forEach { (letter, contacts) ->
@@ -96,21 +97,11 @@ fun HomeScreen(
                         ContactItem(
                             contact = contact,
                             initialLetter = letter,
-                            onSwipedDelete = { viewModel.onEvent(HomeEvent.DeleteContact(contact)) },
-                            onFavoriteClick = {
-                                viewModel.onEvent(
-                                    HomeEvent.AddRemoveFavorite(
-                                        selected = !contact.isFavorite,
-                                        contact = contact
-                                    )
-                                )
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                .clickable(
-                                    onClick = { navController.navigate(Screen.AddEdit.navArg(contact.id)) }
-                                )
+                            onNavigateClick = { navController.navigate(Screen.AddEdit.navArg(it)) },
+                            onSwipedDelete = { viewModel.onEvent(HomeEvent.DeleteContact(it)) },
+                            onFavoriteClick = { selected ->
+                                viewModel.onEvent(HomeEvent.AddRemoveFavorite(selected, contact))
+                            }
                         )
                         if (contact != contacts.last()) {
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))

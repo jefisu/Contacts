@@ -11,7 +11,7 @@ import com.jefisu.contacts.core.presentation.util.Constants.MAX_NAME_CHAR
 import com.jefisu.contacts.core.presentation.util.Constants.MAX_NUMBER_CHAR
 import com.jefisu.contacts.features_contacts.domain.model.Contact
 import com.jefisu.contacts.features_contacts.domain.model.InvalidContactException
-import com.jefisu.contacts.features_contacts.domain.use_case.ContactsUseCase
+import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
-    private val contactUseCase: ContactsUseCase,
+    private val repository: ContactRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -35,7 +35,7 @@ class AddEditViewModel @Inject constructor(
     init {
         savedStateHandle.get<String>("id")?.let { id ->
             viewModelScope.launch {
-                _currentContact = contactUseCase.getContact(id.toInt())
+                _currentContact = repository.getContact(id.toInt())
                 _currentContact?.let {
                     state = state.copy(
                         name = it.name,
@@ -52,7 +52,7 @@ class AddEditViewModel @Inject constructor(
             is AddEditEvent.AddContact -> {
                 viewModelScope.launch {
                     try {
-                        contactUseCase.insertContact(
+                        repository.insertContact(
                             Contact(
                                 name = state.name,
                                 phone = state.phone,
