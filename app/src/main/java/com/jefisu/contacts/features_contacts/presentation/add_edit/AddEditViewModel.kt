@@ -9,8 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.jefisu.contacts.core.presentation.util.Constants.MAX_EMAIL_CHAR
 import com.jefisu.contacts.core.presentation.util.Constants.MAX_NAME_CHAR
 import com.jefisu.contacts.core.presentation.util.Constants.MAX_NUMBER_CHAR
+import com.jefisu.contacts.core.presentation.util.Resource
+import com.jefisu.contacts.core.presentation.util.UiText
 import com.jefisu.contacts.features_contacts.domain.model.Contact
-import com.jefisu.contacts.features_contacts.domain.model.InvalidContactException
 import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -51,18 +52,18 @@ class AddEditViewModel @Inject constructor(
         when (event) {
             is AddEditEvent.AddContact -> {
                 viewModelScope.launch {
-                    try {
-                        repository.insertContact(
-                            Contact(
-                                name = state.name,
-                                phone = state.phone,
-                                email = state.email,
-                                id = _currentContact?.id
+                    val result = repository.insertContact(
+                        Contact(state.name, state.phone, state.email, id = _currentContact?.id)
+                    )
+                    when (result) {
+                        is Resource.Success -> {
+                            _eventFlow.emit(UiEvent.AddSuccessfully)
+                        }
+                        is Resource.Error -> {
+                            _eventFlow.emit(
+                                UiEvent.ShowSnackBar(result.uiText ?: UiText.unknownError())
                             )
-                        )
-                        _eventFlow.emit(UiEvent.AddSuccessfully)
-                    } catch (e: InvalidContactException) {
-                        _eventFlow.emit(UiEvent.ShowSnackBar(e.message.toString()))
+                        }
                     }
                 }
             }
@@ -88,7 +89,7 @@ class AddEditViewModel @Inject constructor(
     }
 
     sealed class UiEvent {
-        data class ShowSnackBar(val message: String) : UiEvent()
+        data class ShowSnackBar(val uiText: UiText) : UiEvent()
         object AddSuccessfully : UiEvent()
     }
 }

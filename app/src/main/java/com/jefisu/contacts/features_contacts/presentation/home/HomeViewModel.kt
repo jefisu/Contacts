@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -26,14 +25,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onEvent(event: HomeEvent) {
-        when (event) {
-            is HomeEvent.DeleteContact -> {
-                viewModelScope.launch {
+        viewModelScope.launch {
+            when (event) {
+                is HomeEvent.DeleteContact -> {
                     repository.deleteContact(event.contact)
                 }
-            }
-            is HomeEvent.AddRemoveFavorite -> {
-                viewModelScope.launch {
+                is HomeEvent.AddRemoveFavorite -> {
                     repository.insertContact(
                         event.contact.copy(isFavorite = event.selected)
                     )

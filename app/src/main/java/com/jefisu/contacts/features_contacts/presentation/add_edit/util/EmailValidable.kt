@@ -7,5 +7,5 @@ fun isEmailValid(email: String): Boolean {
 }
 
 fun emailValidationError(email: String): String {
-    return "E-mail inválido: $email"
+    return "Invalid email: $email"
 }

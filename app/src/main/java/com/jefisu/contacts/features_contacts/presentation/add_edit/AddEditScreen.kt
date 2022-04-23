@@ -17,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,6 @@ import androidx.navigation.NavController
 import com.jefisu.contacts.R
 import com.jefisu.contacts.core.presentation.components.StandardButton
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
-import com.jefisu.contacts.core.presentation.util.Constants
 import com.jefisu.contacts.features_contacts.presentation.add_edit.components.AddEditTextField
 import com.jefisu.contacts.features_contacts.presentation.add_edit.util.phoneVisualTransformation
 
@@ -36,12 +36,13 @@ fun AddEditScreen(
     viewModel: AddEditViewModel = hiltViewModel()
 ) {
     val space = MaterialTheme.spacing
+    val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collect { event ->
             when (event) {
                 is AddEditViewModel.UiEvent.ShowSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.message
+                        message = event.uiText.asString(context)
                     )
                 }
                 is AddEditViewModel.UiEvent.AddSuccessfully -> navController.navigateUp()
