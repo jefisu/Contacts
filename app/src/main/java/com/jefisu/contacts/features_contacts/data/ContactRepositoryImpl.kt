@@ -27,12 +27,12 @@ class ContactRepositoryImpl @Inject constructor(
             .map { contacts ->
                 contacts
                     .map { it.toContact() }
-                    .sortedBy { it.name }
+                    .sortedBy { it.name[0] }
             }
     }
 
-    override suspend fun getContact(id: Int): Contact? {
-        return contactDao.getContact(id)?.toContact()
+    override suspend fun getContact(id: Int): Contact {
+        return contactDao.getContact(id).toContact()
     }
 
     override suspend fun getContactsByName(query: String): Flow<List<Contact>> {
@@ -42,7 +42,7 @@ class ContactRepositoryImpl @Inject constructor(
                     .map { contacts ->
                         contacts
                             .map { it.toContact() }
-                            .sortedBy { it.name }
+                            .sortedBy { it.name[0] }
                             .filter { contact ->
                                 contact.name.lowercase().contains(query.lowercase())
                             }

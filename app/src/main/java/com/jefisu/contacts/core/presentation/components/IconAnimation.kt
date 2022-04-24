@@ -5,7 +5,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -15,11 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
-fun IconButtonAnimation(
+fun IconAnimation(
     selected: Boolean,
     icon: ImageVector,
     color: Color,
-    onClick: () -> Unit
 ) {
     val scaleAnim = remember { Animatable(1f) }
     LaunchedEffect(key1 = selected) {
@@ -37,12 +35,10 @@ fun IconButtonAnimation(
             )
         }
     }
-    IconButton(onClick = onClick) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = color,
-            modifier = Modifier.scale(scaleAnim.value)
-        )
-    }
+    Icon(
+        imageVector = icon,
+        contentDescription = null,
+        tint = color,
+        modifier = Modifier.scale(scaleAnim.value)
+    )
 }

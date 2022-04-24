@@ -1,12 +1,9 @@
 package com.jefisu.contacts.features_contacts.presentation.home
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -90,20 +87,25 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(24.dp))
-                        .background(MaterialTheme.colors.onSurface.copy(0.05f))
+                        .background(
+                            if (isSystemInDarkTheme()) MaterialTheme.colors.onSurface.copy(0.05f)
+                            else MaterialTheme.colors.onSurface.copy(0.17f)
+                        )
                         .padding(MaterialTheme.spacing.small)
                 ) {
                     contacts.forEach { contact ->
                         ContactItem(
                             contact = contact,
                             initialLetter = letter,
-                            onNavigateClick = { navController.navigate(Screen.AddEdit.navArg(it)) },
-                            onSwipedDelete = { viewModel.onEvent(HomeEvent.DeleteContact(it)) },
-                            onFavoriteClick = { selected ->
-                                viewModel.onEvent(HomeEvent.AddRemoveFavorite(selected, contact))
-                            }
+                            onNavigateClick = { navController.navigate(Screen.ContactInfo.navArg(it)) },
+                            onSwipedDelete = { viewModel.onEvent(HomeEvent.DeleteContact(it)) }
                         )
                         if (contact != contacts.last()) {
+                            Divider(
+                                modifier = Modifier
+                                    .padding(top = MaterialTheme.spacing.small)
+                                    .padding(horizontal = MaterialTheme.spacing.small)
+                            )
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                         }
                     }

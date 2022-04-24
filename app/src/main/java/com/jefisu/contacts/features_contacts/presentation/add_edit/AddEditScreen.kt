@@ -1,10 +1,6 @@
 package com.jefisu.contacts.features_contacts.presentation.add_edit
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
@@ -16,17 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.jefisu.contacts.R
-import com.jefisu.contacts.core.presentation.components.StandardButton
+import com.jefisu.contacts.core.presentation.components.CustomIconBackground
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.features_contacts.presentation.add_edit.components.AddEditTextField
+import com.jefisu.contacts.features_contacts.presentation.add_edit.components.BottomButton
 import com.jefisu.contacts.features_contacts.presentation.add_edit.util.phoneVisualTransformation
 
 @Composable
@@ -35,7 +30,6 @@ fun AddEditScreen(
     scaffoldState: ScaffoldState,
     viewModel: AddEditViewModel = hiltViewModel()
 ) {
-    val space = MaterialTheme.spacing
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collect { event ->
@@ -50,39 +44,31 @@ fun AddEditScreen(
         }
     }
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                start = space.small,
-                end = space.medium,
-                top = space.large
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    color = if (isSystemInDarkTheme()) Color.DarkGray else Color.Black,
-                    shape = CircleShape
-                )
-                .padding(space.extraSmall),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(R.drawable.ic_person),
-                contentDescription = "Icon contact",
-                modifier = Modifier.size(70.dp)
+                start = MaterialTheme.spacing.medium,
+                end = MaterialTheme.spacing.medium,
+                top = MaterialTheme.spacing.large,
+                bottom = MaterialTheme.spacing.extraSmall
             )
-        }
-        Spacer(modifier = Modifier.height(space.large))
+    ) {
+        CustomIconBackground(
+            icon = Icons.Default.Person,
+            size = 100.dp,
+            description = "Icon contact"
+        )
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         AddEditTextField(
             text = viewModel.state.name,
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredName(it)) },
             hint = "Name",
             icon = Icons.Default.Person,
-            onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextName) }
+            onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextName) },
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
         )
-        Spacer(modifier = Modifier.height(space.medium))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         AddEditTextField(
             text = viewModel.state.phone,
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredPhone(it)) },
@@ -92,7 +78,7 @@ fun AddEditScreen(
             onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextPhone) },
             visualTransformation = { phoneVisualTransformation(it) }
         )
-        Spacer(modifier = Modifier.height(space.medium))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         AddEditTextField(
             text = viewModel.state.email,
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredEmail(it)) },
@@ -102,16 +88,17 @@ fun AddEditScreen(
             onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextEmail) }
         )
         Row(
-            modifier = Modifier.weight(0.1f),
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
         ) {
-            StandardButton(
+            BottomButton(
                 text = "Cancel",
-                onClickAction = navController::navigateUp
+                onClick = navController::navigateUp
             )
-            StandardButton(
+            BottomButton(
                 text = "Save",
-                onClickAction = { viewModel.onEvent(AddEditEvent.AddContact) }
+                onClick = { viewModel.onEvent(AddEditEvent.AddContact) }
             )
         }
     }

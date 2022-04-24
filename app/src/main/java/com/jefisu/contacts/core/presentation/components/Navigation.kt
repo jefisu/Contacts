@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.jefisu.contacts.core.presentation.util.Screen
 import com.jefisu.contacts.features_contacts.presentation.add_edit.AddEditScreen
+import com.jefisu.contacts.features_contacts.presentation.contact_info.ContactInfoScreen
 import com.jefisu.contacts.features_contacts.presentation.home.HomeScreen
 import com.jefisu.contacts.features_contacts.presentation.search.SearchScreen
 
@@ -28,12 +29,22 @@ fun Navigation(navController: NavHostController, scaffoldState: ScaffoldState) {
             HomeScreen(navController)
         }
         composable(
+            route = Screen.ContactInfo.route + "?id={id}",
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+          ContactInfoScreen(navController)
+        }
+        composable(
             route = Screen.AddEdit.route + "?id={id}",
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.StringType
-                    defaultValue = null
                     nullable = true
+                    defaultValue = null
                 }
             )
         ) {

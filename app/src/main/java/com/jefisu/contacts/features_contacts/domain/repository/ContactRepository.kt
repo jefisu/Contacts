@@ -8,7 +8,7 @@ interface ContactRepository {
 
     fun getContacts(): Flow<List<Contact>>
 
-    suspend fun getContact(id: Int): Contact?
+    suspend fun getContact(id: Int): Contact
 
     suspend fun getContactsByName(query: String = ""): Flow<List<Contact>>
 

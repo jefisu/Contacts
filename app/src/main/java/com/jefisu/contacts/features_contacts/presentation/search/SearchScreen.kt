@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -50,9 +51,16 @@ fun SearchScreen(
                             ContactItem(
                                 contact = contact,
                                 initialLetter = contact.name.take(1),
-                                onNavigateClick = { navController.navigate(Screen.AddEdit.navArg(contact.id)) }
+                                onNavigateClick = {
+                                    navController.navigate(Screen.ContactInfo.navArg(it))
+                                }
                             )
                             if (contact != state.contacts.last()) {
+                                Divider(
+                                    modifier = Modifier
+                                        .padding(top = MaterialTheme.spacing.small)
+                                        .padding(horizontal = MaterialTheme.spacing.small)
+                                )
                                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                             }
                         }

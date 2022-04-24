@@ -1,7 +1,6 @@
 package com.jefisu.contacts.features_contacts.data
 
 import androidx.room.*
-import com.jefisu.contacts.features_contacts.domain.model.Contact
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -11,7 +10,7 @@ interface ContactDao {
     fun getContacts(): Flow<List<ContactEntity>>
 
     @Query("SELECT * FROM ContactEntity WHERE id = :id")
-    suspend fun getContact(id: Int): ContactEntity?
+    suspend fun getContact(id: Int): ContactEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertContact(contact: ContactEntity)

@@ -30,11 +30,6 @@ class HomeViewModel @Inject constructor(
                 is HomeEvent.DeleteContact -> {
                     repository.deleteContact(event.contact)
                 }
-                is HomeEvent.AddRemoveFavorite -> {
-                    repository.insertContact(
-                        event.contact.copy(isFavorite = event.selected)
-                    )
-                }
             }
         }
     }
