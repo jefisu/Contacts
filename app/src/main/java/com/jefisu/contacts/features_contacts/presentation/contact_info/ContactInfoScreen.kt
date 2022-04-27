@@ -93,7 +93,7 @@ fun ContactInfoScreen(
                         onClick = {
                             viewModel.onEvent(
                                 ContactInfoEvent.AddRemoveFavorite(
-                                    selected = !contact.isFavorite,
+                                    selected = contact.isFavorite,
                                     contact = contact
                                 )
                             )

@@ -33,9 +33,12 @@ class ContactInfoViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 is ContactInfoEvent.AddRemoveFavorite -> {
-                    isFavorite = event.selected
+                    isFavorite = when (event.selected) {
+                        true -> !isFavorite
+                        else -> !isFavorite
+                    }
                     repository.insertContact(
-                        event.contact.copy(isFavorite = event.selected)
+                        event.contact.copy(isFavorite = isFavorite)
                     )
                 }
             }
