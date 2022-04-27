@@ -53,7 +53,13 @@ class AddEditViewModel @Inject constructor(
             is AddEditEvent.AddContact -> {
                 viewModelScope.launch {
                     val result = repository.insertContact(
-                        Contact(state.name, state.phone, state.email, id = _currentContact?.id)
+                        Contact(
+                            name = state.name,
+                           phone =  state.phone,
+                            email = state.email,
+                            isFavorite = _currentContact?.isFavorite ?: false,
+                            id = _currentContact?.id
+                        )
                     )
                     when (result) {
                         is Resource.Success -> {
