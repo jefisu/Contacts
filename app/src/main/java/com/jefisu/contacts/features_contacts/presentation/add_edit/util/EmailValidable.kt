@@ -1,9 +1,9 @@
 package com.jefisu.contacts.features_contacts.presentation.add_edit.util
 
-import java.util.regex.Pattern
+import android.util.Patterns
 
 fun isEmailValid(email: String): Boolean {
-    return Pattern.matches("^(.+)@(.+)\$", email)
+    return Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }
 
 fun emailValidationError(email: String): String {
