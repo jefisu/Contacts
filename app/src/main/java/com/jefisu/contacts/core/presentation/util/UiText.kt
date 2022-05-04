@@ -1,8 +1,8 @@
 package com.jefisu.contacts.core.presentation.util
 
-import android.content.Context
 import androidx.annotation.StringRes
-import com.jefisu.contacts.R
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 
 sealed class UiText {
     data class DynamicString(val value: String) : UiText()
@@ -11,16 +11,11 @@ sealed class UiText {
         vararg val args: Any
     ) : UiText()
 
-    companion object {
-        fun unknownError(): UiText {
-            return StringResource(R.string.unknown_error)
-        }
-    }
-
-    fun asString(context: Context): String {
+    @Composable
+    fun asString(): String {
         return when (this) {
             is DynamicString -> value
-            is StringResource -> context.getString(resId, *args)
+            is StringResource -> stringResource(resId, *args)
         }
     }
 }

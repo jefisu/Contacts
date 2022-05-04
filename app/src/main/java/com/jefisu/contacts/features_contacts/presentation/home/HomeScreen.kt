@@ -34,6 +34,7 @@ fun HomeScreen(
     val state = viewModel.state
     val scrollState = rememberScrollState()
     val collapsingState = rememberCollapsingToolbarScaffoldState()
+
     CollapsingToolbarScaffold(
         modifier = Modifier.fillMaxSize(),
         state = collapsingState,
@@ -80,6 +81,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
+                .clip(RoundedCornerShape(24.dp))
                 .verticalScroll(scrollState)
         ) {
             state.contacts.forEach { (letter, contacts) ->

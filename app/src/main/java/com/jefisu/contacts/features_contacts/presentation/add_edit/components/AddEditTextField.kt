@@ -1,5 +1,6 @@
 package com.jefisu.contacts.features_contacts.presentation.add_edit.components
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -16,7 +18,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AddEditTextField(
+fun ColumnScope.AddEditTextField(
     text: String,
     onTextChange: (String) -> Unit,
     icon: ImageVector,
@@ -25,7 +27,8 @@ fun AddEditTextField(
     hint: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onClickClearText: () -> Unit = {},
-    keyboardOptions: KeyboardOptions = KeyboardOptions()
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    errorMessage: String?
 ) {
     TextField(
         value = text,
@@ -62,4 +65,11 @@ fun AddEditTextField(
             unfocusedIndicatorColor = Color.Transparent,
         )
     )
+    if (errorMessage != null) {
+        Text(
+            text = errorMessage,
+            color = MaterialTheme.colors.error,
+            modifier = Modifier.align(Alignment.End)
+        )
+    }
 }

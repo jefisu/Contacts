@@ -3,7 +3,6 @@ package com.jefisu.contacts.features_contacts.presentation.add_edit
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
@@ -12,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -27,19 +25,13 @@ import com.jefisu.contacts.features_contacts.presentation.add_edit.util.phoneVis
 @Composable
 fun AddEditScreen(
     navController: NavController,
-    scaffoldState: ScaffoldState,
     viewModel: AddEditViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
+    val state = viewModel.state
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collect { event ->
-            when (event) {
-                is AddEditViewModel.UiEvent.ShowSnackBar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.uiText.asString(context)
-                    )
-                }
-                is AddEditViewModel.UiEvent.AddSuccessfully -> navController.navigateUp()
+        viewModel.eventChannel.collect { event ->
+            if (event == AddEditViewModel.UiEvent.AddSuccessfully) {
+                navController.navigateUp()
             }
         }
     }
@@ -61,31 +53,34 @@ fun AddEditScreen(
         )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         AddEditTextField(
-            text = viewModel.state.name,
+            text = state.name,
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredName(it)) },
             hint = "Name",
             icon = Icons.Default.Person,
             onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextName) },
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+            errorMessage = state.nameErrorMessage?.asString()
         )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         AddEditTextField(
-            text = viewModel.state.phone,
+            text = state.phone,
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredPhone(it)) },
             hint = "Phone",
             icon = Icons.Default.Phone,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextPhone) },
-            visualTransformation = { phoneVisualTransformation(it) }
+            visualTransformation = { phoneVisualTransformation(it) },
+            errorMessage = state.phoneErrorMessage?.asString()
         )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         AddEditTextField(
-            text = viewModel.state.email,
+            text = state.email,
             onTextChange = { viewModel.onEvent(AddEditEvent.EnteredEmail(it)) },
             hint = "Email",
             icon = Icons.Default.Email,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextEmail) }
+            onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextEmail) },
+            errorMessage = state.emailErrorMessage?.asString()
         )
         Row(
             verticalAlignment = Alignment.Bottom,

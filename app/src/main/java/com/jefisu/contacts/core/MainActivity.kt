@@ -6,7 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAddAlt
 import androidx.compose.runtime.getValue
@@ -35,20 +38,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-               splashScreen.isLoading.value
+                splashScreen.isLoading.value
             }
         }
         setContent {
             ContactsTheme {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val scaffoldState = rememberScaffoldState()
 
                 Scaffold(
-                    scaffoldState = scaffoldState,
                     modifier = Modifier.fillMaxSize(),
                     floatingActionButton = {
-                        val enabledFab = navBackStackEntry?.destination?.route in listOf(Screen.Home.route)
+                        val enabledFab =
+                            navBackStackEntry?.destination?.route in listOf(Screen.Home.route)
                         if (enabledFab) {
                             FloatingActionButton(
                                 onClick = { navController.navigate(Screen.AddEdit.route) },
@@ -63,7 +65,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) {
-                    Navigation(navController, scaffoldState)
+                    Navigation(navController)
                 }
             }
         }

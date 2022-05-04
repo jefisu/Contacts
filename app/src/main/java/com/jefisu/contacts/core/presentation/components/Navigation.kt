@@ -20,7 +20,7 @@ import com.jefisu.contacts.features_contacts.presentation.search.SearchScreen
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun Navigation(navController: NavHostController, scaffoldState: ScaffoldState) {
+fun Navigation(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route
@@ -49,7 +49,7 @@ fun Navigation(navController: NavHostController, scaffoldState: ScaffoldState) {
             )
         ) {
             EnterAnimation {
-                AddEditScreen(navController, scaffoldState)
+                AddEditScreen(navController)
             }
         }
         composable(Screen.Search.route) {

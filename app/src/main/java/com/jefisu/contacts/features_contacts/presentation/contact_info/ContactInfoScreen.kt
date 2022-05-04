@@ -7,8 +7,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,7 +17,6 @@ import androidx.navigation.NavController
 import com.jefisu.contacts.core.presentation.components.CustomIconBackground
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.core.presentation.util.Screen
-import com.jefisu.contacts.features_contacts.domain.model.Contact
 import com.jefisu.contacts.features_contacts.presentation.contact_info.components.BasicCard
 import com.jefisu.contacts.features_contacts.presentation.contact_info.components.BottomIconButton
 import com.jefisu.contacts.features_contacts.presentation.contact_info.components.CardInfo
@@ -29,7 +26,7 @@ fun ContactInfoScreen(
     navController: NavController,
     viewModel: ContactInfoViewModel = hiltViewModel()
 ) {
-    val contact by viewModel.contactFlow.collectAsState(initial = Contact())
+    val contact = viewModel.contact
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -89,14 +86,9 @@ fun ContactInfoScreen(
                         text = "Favorite",
                         icon = Icons.Default.Star,
                         description = "Add contact to favorites",
-                        isFavorite = viewModel.isFavorite,
+                        isFavorite = contact.isFavorite,
                         onClick = {
-                            viewModel.onEvent(
-                                ContactInfoEvent.AddRemoveFavorite(
-                                    selected = contact.isFavorite,
-                                    contact = contact
-                                )
-                            )
+                            viewModel.onEvent(ContactInfoEvent.AddRemoveFavorite)
                         }
                     )
                 }

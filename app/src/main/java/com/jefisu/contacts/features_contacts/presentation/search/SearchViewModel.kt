@@ -49,8 +49,7 @@ class SearchViewModel @Inject constructor(
                         state = state.copy(
                             contacts = contacts
                         )
-                    }
-                    .launchIn(this)
+                    }.launchIn(this)
             }
         }
     }

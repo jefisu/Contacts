@@ -9,13 +9,16 @@ import androidx.lifecycle.viewModelScope
 import com.jefisu.contacts.core.presentation.util.Constants.MAX_EMAIL_CHAR
 import com.jefisu.contacts.core.presentation.util.Constants.MAX_NAME_CHAR
 import com.jefisu.contacts.core.presentation.util.Constants.MAX_NUMBER_CHAR
-import com.jefisu.contacts.core.presentation.util.Resource
-import com.jefisu.contacts.core.presentation.util.UiText
 import com.jefisu.contacts.features_contacts.domain.model.Contact
 import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
+import com.jefisu.contacts.features_contacts.presentation.add_edit.util.validateEmail
+import com.jefisu.contacts.features_contacts.presentation.add_edit.util.validateName
+import com.jefisu.contacts.features_contacts.presentation.add_edit.util.validatePhone
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,48 +33,29 @@ class AddEditViewModel @Inject constructor(
 
     private var _currentContact: Contact? = null
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _eventChannel = Channel<UiEvent>()
+    val eventChannel = _eventChannel.receiveAsFlow()
 
     init {
         savedStateHandle.get<String>("id")?.let { id ->
-            viewModelScope.launch {
-                _currentContact = repository.getContact(id.toInt())
-                _currentContact?.let {
-                    state = state.copy(
-                        name = it.name,
-                        phone = it.phone,
-                        email = it.email
-                    )
-                }
-            }
+            repository.getContact(id.toInt())
+                .onEach { contact ->
+                    _currentContact = contact
+                    _currentContact?.let {
+                        state = state.copy(
+                            name = it.name,
+                            phone = it.phone,
+                            email = it.email
+                        )
+                    }
+                }.launchIn(viewModelScope)
         }
     }
 
     fun onEvent(event: AddEditEvent) {
         when (event) {
             is AddEditEvent.AddContact -> {
-                viewModelScope.launch {
-                    val result = repository.insertContact(
-                        Contact(
-                            name = state.name,
-                           phone =  state.phone,
-                            email = state.email,
-                            isFavorite = _currentContact?.isFavorite ?: false,
-                            id = _currentContact?.id
-                        )
-                    )
-                    when (result) {
-                        is Resource.Success -> {
-                            _eventFlow.emit(UiEvent.AddSuccessfully)
-                        }
-                        is Resource.Error -> {
-                            _eventFlow.emit(
-                                UiEvent.ShowSnackBar(result.uiText ?: UiText.unknownError())
-                            )
-                        }
-                    }
-                }
+                saveContact()
             }
             is AddEditEvent.EnteredName -> {
                 if (event.name.length <= MAX_NAME_CHAR) {
@@ -94,8 +78,41 @@ class AddEditViewModel @Inject constructor(
         }
     }
 
+    private fun saveContact() {
+        val nameResult = validateName(state.name)
+        val phoneResult = validatePhone(state.phone)
+        val emailResult = validateEmail(state.email)
+
+        val hasError = listOf(
+            nameResult,
+            phoneResult,
+            emailResult
+        ).any { it.errorMessage != null }
+
+        if (hasError) {
+            state = state.copy(
+                nameErrorMessage = nameResult.errorMessage,
+                phoneErrorMessage = phoneResult.errorMessage,
+                emailErrorMessage = emailResult.errorMessage
+            )
+            return
+        }
+
+        viewModelScope.launch {
+            repository.insertContact(
+                Contact(
+                    name = state.name,
+                    phone = state.phone,
+                    email = state.email,
+                    isFavorite = _currentContact?.isFavorite ?: false,
+                    id = _currentContact?.id
+                )
+            )
+            _eventChannel.send(UiEvent.AddSuccessfully)
+        }
+    }
+
     sealed class UiEvent {
-        data class ShowSnackBar(val uiText: UiText) : UiEvent()
         object AddSuccessfully : UiEvent()
     }
 }

@@ -6,26 +6,29 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jefisu.contacts.features_contacts.domain.model.Contact
 import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ContactInfoViewModel @Inject constructor(
     private val repository: ContactRepository,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var isFavorite by mutableStateOf(false)
+    var contact by mutableStateOf(Contact())
         private set
 
-    val contactFlow = flow {
+    init {
         savedStateHandle.get<String>("id")?.let { id ->
-            val contact = repository.getContact(id.toInt())
-            isFavorite = contact.isFavorite
-            emit(contact)
+            repository.getContact(id.toInt())
+                .onEach {
+                    it?.let { contact = it }
+                }.launchIn(viewModelScope)
         }
     }
 
@@ -33,13 +36,10 @@ class ContactInfoViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 is ContactInfoEvent.AddRemoveFavorite -> {
-                    isFavorite = when (event.selected) {
-                        true -> !isFavorite
-                        else -> !isFavorite
-                    }
-                    repository.insertContact(
-                        event.contact.copy(isFavorite = isFavorite)
+                    contact = contact.copy(
+                        isFavorite = !contact.isFavorite
                     )
+                    repository.insertContact(contact)
                 }
             }
         }
