@@ -33,7 +33,7 @@ fun CardInfo(
     icon: ImageVector,
     iconColor: Color = MaterialTheme.colors.onSurface,
     iconBackgroundColor: Color,
-    backgroundColor: Color = if (isSystemInDarkTheme()) Color.DarkGray.copy(0.5f) else MaterialTheme.colors.onSurface.copy(0.17f),
+    backgroundColor: Color = Color.DarkGray.copy(0.5f),
     backgroundShape: Shape = RoundedCornerShape(16.dp),
     textStyle: TextStyle = TextStyle(
         color = MaterialTheme.colors.onSurface,

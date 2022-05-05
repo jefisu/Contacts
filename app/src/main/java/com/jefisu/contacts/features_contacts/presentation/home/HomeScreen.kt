@@ -89,10 +89,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(24.dp))
-                        .background(
-                            if (isSystemInDarkTheme()) MaterialTheme.colors.onSurface.copy(0.05f)
-                            else MaterialTheme.colors.onSurface.copy(0.17f)
-                        )
+                        .background(MaterialTheme.colors.onSurface.copy(0.05f))
                         .padding(MaterialTheme.spacing.small)
                 ) {
                     contacts.forEach { contact ->

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 fun CustomIconBackground(
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    tint: Color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+    tint: Color = Color.White,
     size: Dp,
     backgroundShape: Shape = CircleShape,
     space: Dp = 8.dp,

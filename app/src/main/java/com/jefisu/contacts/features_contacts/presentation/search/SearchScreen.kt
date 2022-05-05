@@ -1,5 +1,7 @@
 package com.jefisu.contacts.features_contacts.presentation.search
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +20,7 @@ import com.jefisu.contacts.core.presentation.util.Screen
 import com.jefisu.contacts.features_contacts.presentation.home.components.ContactItem
 import com.jefisu.contacts.features_contacts.presentation.search.components.SearchTextField
 
+@ExperimentalAnimationApi
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchScreen(
@@ -35,18 +38,22 @@ fun SearchScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
+
         LazyColumn(
             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small)
         ) {
-            if (state.query.isNotBlank() && state.contacts.isNotEmpty()) {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(24.dp))
-                            .background(MaterialTheme.colors.onSurface.copy(0.05f))
-                            .padding(MaterialTheme.spacing.small)
-                    ) {
+            val showContactsSearched =
+                state.query.isNotBlank() && state.contacts.isNotEmpty()
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colors.onSurface.copy(0.05f))
+                        .padding(if (showContactsSearched) MaterialTheme.spacing.small else MaterialTheme.spacing.default)
+                        .animateContentSize()
+                ) {
+                    if (showContactsSearched) {
                         state.contacts.forEach { contact ->
                             ContactItem(
                                 contact = contact,

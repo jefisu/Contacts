@@ -1,5 +1,6 @@
 package com.jefisu.contacts.core
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.jefisu.contacts.core.presentation.components.Navigation
 import com.jefisu.contacts.core.presentation.ui.theme.ContactsTheme
 import com.jefisu.contacts.core.presentation.ui.theme.NavyBlue
@@ -34,6 +35,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var splashScreen: SplashScreen
 
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
@@ -42,8 +44,8 @@ class MainActivity : ComponentActivity() {
             }
         }
         setContent {
-            ContactsTheme {
-                val navController = rememberNavController()
+            ContactsTheme(darkTheme = true) {
+                val navController = rememberAnimatedNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
 
                 Scaffold(
