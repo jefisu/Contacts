@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.jefisu.contacts.core.presentation.components.CustomIconBackground
+import com.jefisu.contacts.core.presentation.components.IconShapeBackground
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.core.presentation.util.Screen
 import com.jefisu.contacts.features_contacts.presentation.contact_info.components.BasicCard
@@ -93,7 +93,7 @@ fun ContactInfoScreen(
                     )
                 }
             }
-            CustomIconBackground(
+            IconShapeBackground(
                 icon = Icons.Default.Person,
                 size = 100.dp,
                 description = "Icon contact",

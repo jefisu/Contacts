@@ -1,7 +1,6 @@
 package com.jefisu.contacts.core.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CustomIconBackground(
+fun IconShapeBackground(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     tint: Color = Color.White,

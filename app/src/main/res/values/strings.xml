@@ -3,4 +3,6 @@
     <string name="filling_in_the_field_is_mandatory">Filling the %s is required</string>
     <string name="the_number_must_contain_characters">The number must contain %d characters</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="selected_contacts">%d selected</string>
+    <string name="contact_in_device">%d contacts in device</string>
 </resources>

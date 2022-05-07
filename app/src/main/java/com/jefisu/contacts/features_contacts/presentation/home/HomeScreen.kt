@@ -1,11 +1,16 @@
 package com.jefisu.contacts.features_contacts.presentation.home
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.*
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +39,8 @@ fun HomeScreen(
     val state = viewModel.state
     val scrollState = rememberScrollState()
     val collapsingState = rememberCollapsingToolbarScaffoldState()
+    val contactsIsSelected = viewModel.selectedContacts.isNotEmpty()
+    val isExpanded = collapsingState.toolbarState.progress == 1f
 
     CollapsingToolbarScaffold(
         modifier = Modifier.fillMaxSize(),
@@ -49,29 +56,50 @@ fun HomeScreen(
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.road(
-                    whenCollapsed = Alignment.TopStart,
-                    whenExpanded = Alignment.Center
-                )
+                modifier = Modifier.road(Alignment.Center, Alignment.Center)
             ) {
                 Text(
-                    text = stringResource(id = R.string.app_name),
-                    style = MaterialTheme.typography.h4
+                    text = stringResource(
+                        id = if (contactsIsSelected) R.string.selected_contacts else R.string.app_name,
+                        viewModel.selectedContacts.size
+                    ),
+                    style = if (isExpanded) MaterialTheme.typography.h4 else MaterialTheme.typography.h5
                 )
-                if (collapsingState.toolbarState.progress == 1f) {
-                    Text(text = "${state.listSize} contacts in device")
+                if (isExpanded && !contactsIsSelected) {
+                    Text(text = stringResource(id = R.string.contact_in_device, state.listSize))
+                }
+            }
+            if (contactsIsSelected) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.road(Alignment.CenterStart, Alignment.BottomStart)
+                ) {
+                    Checkbox(
+                        checked = state.contacts.size == viewModel.selectedContacts.size,
+                        onCheckedChange = { viewModel.onEvent(HomeEvent.OnSelectAllContacts) },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colors.onSurface
+                        )
+                    )
+                    Text(text = "All")
                 }
             }
             IconButton(
-                onClick = { navController.navigate(Screen.Search.route) },
+                onClick = {
+                    if (contactsIsSelected) {
+                        viewModel.onEvent(HomeEvent.DeleteContact)
+                        return@IconButton
+                    }
+                    navController.navigate(Screen.Search.route)
+                },
                 modifier = Modifier.road(
-                    whenCollapsed = Alignment.TopEnd,
+                    whenCollapsed = Alignment.CenterEnd,
                     whenExpanded = Alignment.BottomEnd
                 )
             ) {
                 Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search contact"
+                    imageVector = if (contactsIsSelected) Icons.Default.DeleteForever else Icons.Default.Search,
+                    contentDescription = "Search/Delete contact"
                 )
             }
         }
@@ -80,36 +108,53 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = MaterialTheme.spacing.small)
                 .clip(RoundedCornerShape(24.dp))
                 .verticalScroll(scrollState)
         ) {
-            state.contacts.forEach { (letter, contacts) ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(MaterialTheme.colors.onSurface.copy(0.05f))
-                        .padding(MaterialTheme.spacing.small)
-                ) {
-                    contacts.forEach { contact ->
-                        ContactItem(
-                            contact = contact,
-                            initialLetter = letter,
-                            onNavigateClick = { navController.navigate(Screen.ContactInfo.navArg(it)) },
-                            onSwipedDelete = { viewModel.onEvent(HomeEvent.DeleteContact(it)) }
-                        )
-                        if (contact != contacts.last()) {
-                            Divider(
-                                modifier = Modifier
-                                    .padding(top = MaterialTheme.spacing.small)
-                                    .padding(horizontal = MaterialTheme.spacing.small)
+            state.contacts
+                .groupBy { it.name.take(1) }
+                .forEach { (letter, contacts) ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(24.dp))
+                            .background(MaterialTheme.colors.onSurface.copy(0.05f))
+                            .padding(MaterialTheme.spacing.small)
+                            .animateContentSize()
+                    ) {
+                        contacts.forEach { contact ->
+                            val isSelectedContact =
+                                viewModel.selectedContacts.any { it.id == contact.id }
+                            ContactItem(
+                                contact = contact,
+                                initialLetter = letter,
+                                isSelected = isSelectedContact,
+                                onClick = {
+                                    if (contactsIsSelected) {
+                                        viewModel.onEvent(HomeEvent.OnSelectContact(contact))
+                                        return@ContactItem
+                                    }
+                                    navController.navigate(Screen.ContactInfo.navArg(contact.id))
+                                },
+                                onLongClickSelectDelete = {
+                                    if (contactsIsSelected) {
+                                        return@ContactItem
+                                    }
+                                    viewModel.onEvent(HomeEvent.OnSelectContact(contact))
+                                }
                             )
-                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                            if (contact != contacts.last()) {
+                                Divider(
+                                    modifier = Modifier
+                                        .padding(top = MaterialTheme.spacing.small)
+                                        .padding(horizontal = MaterialTheme.spacing.small)
+                                )
+                                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                            }
                         }
                     }
                 }
-            }
         }
     }
 }

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.jefisu.contacts.core.presentation.components.CustomIconBackground
+import com.jefisu.contacts.core.presentation.components.IconShapeBackground
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.features_contacts.presentation.add_edit.components.AddEditTextField
 import com.jefisu.contacts.features_contacts.presentation.add_edit.components.BottomButton
@@ -46,7 +46,7 @@ fun AddEditScreen(
                 bottom = MaterialTheme.spacing.extraSmall
             )
     ) {
-        CustomIconBackground(
+        IconShapeBackground(
             icon = Icons.Default.Person,
             size = 100.dp,
             description = "Icon contact"

@@ -1,7 +1,6 @@
 package com.jefisu.contacts.features_contacts.presentation.contact_info.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +20,7 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jefisu.contacts.core.presentation.components.CustomIconBackground
+import com.jefisu.contacts.core.presentation.components.IconShapeBackground
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
 import com.jefisu.contacts.features_contacts.presentation.add_edit.util.phoneVisualTransformation
 
@@ -49,7 +48,7 @@ fun CardInfo(
             .background(backgroundColor)
             .padding(12.dp)
     ) {
-        CustomIconBackground(
+        IconShapeBackground(
             icon = icon,
             tint = iconColor,
             size = 25.dp,

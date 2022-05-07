@@ -1,10 +1,12 @@
 package com.jefisu.contacts.features_contacts.presentation.home
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jefisu.contacts.features_contacts.domain.model.Contact
 import com.jefisu.contacts.features_contacts.domain.repository.ContactRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -20,6 +22,8 @@ class HomeViewModel @Inject constructor(
     var state by mutableStateOf(HomeState())
         private set
 
+    val selectedContacts = mutableStateListOf<Contact>()
+
     init {
         getContacts()
     }
@@ -28,7 +32,30 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 is HomeEvent.DeleteContact -> {
-                    repository.deleteContact(event.contact)
+                    selectedContacts.apply {
+                        forEach { repository.deleteContact(it) }
+                        clear()
+                    }
+                }
+                is HomeEvent.OnSelectAllContacts -> {
+                    selectedContacts.apply {
+                        if (containsAll(state.contacts)) {
+                            clear()
+                            return@launch
+                        }
+                        clear()
+                        addAll(state.contacts)
+                    }
+                }
+                is HomeEvent.OnSelectContact -> {
+                    selectedContacts.apply {
+                        val contactIsNotSelected = find { event.contact == it }
+                        if (contactIsNotSelected != null) {
+                            remove(event.contact)
+                            return@launch
+                        }
+                        add(event.contact)
+                    }
                 }
             }
         }
@@ -38,7 +65,7 @@ class HomeViewModel @Inject constructor(
         repository.getContacts()
             .onEach { contacts ->
                 state = state.copy(
-                    contacts = contacts.groupBy { it.name.first().uppercase() },
+                    contacts = contacts,
                     listSize = contacts.size
                 )
             }.launchIn(viewModelScope)

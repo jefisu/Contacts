@@ -2,6 +2,7 @@ package com.jefisu.contacts.features_contacts.presentation.search
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,7 @@ import com.jefisu.contacts.core.presentation.util.Screen
 import com.jefisu.contacts.features_contacts.presentation.home.components.ContactItem
 import com.jefisu.contacts.features_contacts.presentation.search.components.SearchTextField
 
+@ExperimentalFoundationApi
 @ExperimentalAnimationApi
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -58,8 +60,8 @@ fun SearchScreen(
                             ContactItem(
                                 contact = contact,
                                 initialLetter = contact.name.take(1),
-                                onNavigateClick = {
-                                    navController.navigate(Screen.ContactInfo.navArg(it))
+                                onClick = {
+                                    navController.navigate(Screen.ContactInfo.navArg(contact.id))
                                 }
                             )
                             if (contact != state.contacts.last()) {
