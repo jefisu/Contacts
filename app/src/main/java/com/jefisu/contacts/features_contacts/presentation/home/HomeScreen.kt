@@ -53,7 +53,8 @@ fun HomeScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { navController.navigate(Screen.AddEdit.route) },
-                backgroundColor = NavyBlue
+                backgroundColor = NavyBlue,
+                modifier = Modifier.testTag(TestTag.FAB)
             ) {
                 Icon(
                     imageVector = Icons.Default.PersonAddAlt,

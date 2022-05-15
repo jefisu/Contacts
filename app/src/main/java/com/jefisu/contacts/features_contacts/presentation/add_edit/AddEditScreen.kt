@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jefisu.contacts.core.presentation.components.IconShapeBackground
 import com.jefisu.contacts.core.presentation.ui.theme.spacing
+import com.jefisu.contacts.core.presentation.util.TestTag
 import com.jefisu.contacts.features_contacts.presentation.add_edit.components.AddEditTextField
 import com.jefisu.contacts.features_contacts.presentation.add_edit.components.BottomButton
 import com.jefisu.contacts.features_contacts.presentation.add_edit.util.phoneVisualTransformation
@@ -59,7 +60,8 @@ fun AddEditScreen(
             icon = Icons.Default.Person,
             onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextName) },
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-            errorMessage = state.nameErrorMessage?.asString()
+            errorMessage = state.nameErrorMessage?.asString(),
+            testTag = TestTag.FIELD_NAME
         )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         AddEditTextField(
@@ -70,7 +72,8 @@ fun AddEditScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextPhone) },
             visualTransformation = { phoneVisualTransformation(it) },
-            errorMessage = state.phoneErrorMessage?.asString()
+            errorMessage = state.phoneErrorMessage?.asString(),
+            testTag = TestTag.FIELD_PHONE
         )
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
         AddEditTextField(
@@ -80,7 +83,8 @@ fun AddEditScreen(
             icon = Icons.Default.Email,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             onClickClearText = { viewModel.onEvent(AddEditEvent.ClearTextEmail) },
-            errorMessage = state.emailErrorMessage?.asString()
+            errorMessage = state.emailErrorMessage?.asString(),
+            testTag = TestTag.FIELD_EMAIL
         )
         Row(
             verticalAlignment = Alignment.Bottom,

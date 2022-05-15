@@ -77,7 +77,7 @@ fun ContactItem(
         if (contact.isFavorite) {
             Icon(
                 imageVector = Icons.Default.Star,
-                contentDescription = "",
+                contentDescription = "contact in favorites",
                 tint = Color.Yellow,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)

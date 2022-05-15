@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
@@ -28,7 +29,8 @@ fun ColumnScope.AddEditTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onClickClearText: () -> Unit = {},
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
-    errorMessage: String?
+    errorMessage: String?,
+    testTag: String
 ) {
     TextField(
         value = text,
@@ -40,7 +42,8 @@ fun ColumnScope.AddEditTextField(
         textStyle = MaterialTheme.typography.h5,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp)),
+            .clip(RoundedCornerShape(16.dp))
+            .testTag(testTag),
         visualTransformation = visualTransformation,
         leadingIcon = {
             Icon(
